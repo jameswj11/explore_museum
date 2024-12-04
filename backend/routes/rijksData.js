@@ -1,10 +1,10 @@
 'use strict';
 import express from "express";
-import metData from "../models/metData.js";
+import rijksData from "../models/rijksData.js";
 
 const router = express.Router();
 router.get('/', async (req, res) => {
-    res.send(await metData.searchArt())
+    res.send(await rijksData.searchArt())
 })
 
 export default router;

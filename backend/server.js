@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
-import homeRoute from "../routes/home_route.js";
-import metRoute from '../routes/met_route.js';
+import homeRoute from "./routes/home_route.js";
+import rijksRoute from './routes/rijksData.js';
 
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -11,7 +12,7 @@ app.use(express.json());
 
 //routing
 app.use("/", homeRoute);
-app.use("/met", metRoute);
+app.use("/rijks", rijksRoute);
 
 // start the express server
 app.listen(PORT, ()=> {
