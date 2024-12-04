@@ -5,7 +5,7 @@ import {dirname} from 'path';
 import path from 'path';
 import {fileURLToPath} from 'url'
 import homeRoute from "./backend/routes/home_route.js";
-import rijksRoute from './backend/routes/rijksData.js';
+import API_route from './backend/routes/api_route.js';
 
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -18,10 +18,10 @@ app.use(express.json());
 
 // routing
 app.use("/", homeRoute);
-app.use("/rijks", rijksRoute);
+app.use("/api", API_route);
 
 //public
-app.use(express.static(path.join(__dirname, '/frontend/public')))
+app.use(express.static(path.join(__dirname, '/frontend')))
 
 //views
 app.set('views', path.join(__dirname, 'frontend/views'))
