@@ -6,7 +6,7 @@ const API_KEY = process.env.RIJKSMUSEUM_API;
 
 const searchParams = {
 	key: API_KEY,
-	q: 'rembrandt',
+	q: 'vermeer',
 	imgonly: true
 }
 

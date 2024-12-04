@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import express from "express";
 import cors from "cors";
-import homeRoute from "./routes/home_route.js";
-import rijksRoute from './routes/rijksData.js';
+import homeRoute from "./backend/routes/home_route.js";
+import rijksRoute from './backend/routes/rijksData.js';
 
 const PORT = process.env.PORT || 5050;
 const app = express();
