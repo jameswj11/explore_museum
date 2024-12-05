@@ -1,43 +1,64 @@
-const axios = require('axios');
+let $mainContainer = $("#mainContainer");
+let $resultsContainer = $("#resultsContainer");
 
-$(()=> {
-    console.log('hello from script.js')
+const queryObject = {};
 
-    axios.get('/api/data')
-         .then(response=> {
-          console.log(response.data)
-         })
-         .catch(error=> {
-          console.error(error)
-         })
-    // get images on page load
-    // $.ajax({
-    //     url: "/api/data",
-    //     method: "GET",
-    //     datatype: "json",
-    //     success: (data) => {
-    //         console.log(data)
-    //     },
-    //     error: function(jqXHR, textStatus, errorThrown) {
-    //         if (textStatus === 'error' && errorThrown === 'Connection refused') {
-    //           // Handle connection refused error
-    //           console.error('Connection refused!');
-    //         } else {
-    //           // Handle other AJAX errors
-    //         //   console.error('AJAX Error:', textStatus, errorThrown);
-    //         }
-    //     }
-    // });
+// get all images on page load
+getData(queryObject);
 
-    // async function fetchData() {
-    //     try {
-    //       const response = await fetch('/api/data');
-    //       const data = await response.json(); 
-    //       console.log(data); 
-    //     } catch (error) {
-    //       console.error('Error:', error);
-    //     }
-    //   }
-    
-    //   fetchData();
+function getData(queryObject) {
+  axios
+    .get("/api/data", { params: queryObject })
+    .then((response) => {
+      parseData(response.data.artObjects);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+function parseData(data) {
+  const dataArray = [];
+  data.forEach((element) => {
+    // check broken image links
+    if (!element.webImage.url.includes("http")) return;
+
+    const artObj = {};
+
+    artObj.title = element.title;
+    artObj.longTitle = element.longTitle;
+    artObj.maker = element.principalOrFirstMaker;
+    artObj.imageURL = element.webImage.url;
+
+    dataArray.push(artObj);
+  });
+
+  createElements(dataArray);
+}
+
+function createElements(dataArray) {
+  // clear container for each new search
+  $resultsContainer.empty();
+
+  dataArray.forEach((element) => {
+    let card = document.createElement("div");
+    let image = document.createElement("img");
+    let desc = document.createElement("p");
+
+    image.src = element.imageURL;
+    desc.textContent = element.longTitle;
+
+    card.append(image);
+    card.append(desc);
+
+    resultsContainer.append(card);
+  });
+}
+
+// handle search queries
+$("button").on("click", () => {
+  queryObject.q = $("input").val();
+
+  // api call with new params
+  getData(queryObject);
 });
