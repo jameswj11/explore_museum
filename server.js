@@ -21,7 +21,7 @@ const __dirname = dirname(__filename);
 
 
 // connect DB
-// mongoose.connect("mongodb://localhost/27017");
+mongoose.connect("mongodb://localhost/27017");
 
 // middlewares
 app.use(cors());
@@ -42,44 +42,44 @@ passport.deserializeUser(User.deserializeUser());
 // routing
 app.use("/", homeRoute);
 app.use("/api", API_route);
-app.use("/secret", (req, res)=> {
-  res.render("./user/secret");
+app.use("/secret", isLoggedIn, (req, res)=> {
+  res.render("secret");
 })
-app.use("/register", (req, res)=> {
+app.use("register", (req, res)=> {
   res.render("./user/register");
 })
 
 // handle user signup
-// app.get("/register", async (req, res)=> {
-//   const user = await User.create({
-//     username: req.body.username,
-//     password: req.body.password
-//   })
-//   return res.status(200).json(user);
-// })
+app.get("/register", async (req, res)=> {
+  const user = await User.create({
+    username: req.body.username,
+    password: req.body.password
+  })
+  return res.status(200).json(user);
+})
 
 app.use("/login", (req, res)=> {
   res.render("./user/login");
 })
 
 //handle user login
-// app.post("/login", async (req, res)=> {
-//   try {
-//     const user = await User.findOne( {username: req.body.username})
-//     if (user) {
-//       const result = req.body.password === user.password;
-//       if (result) {
-//         res.render("./user/secret");
-//       } else {
-//         res.status(400).json({error: "password doesn't match"})
-//       }
-//     } else {
-//       res.status(400).json({error: "user doesn't exist"})
-//     }
-//   } catch (error) {
-//     res.status(400).json({error})
-//   }
-// })
+app.post("/login", async (req, res)=> {
+  try {
+    const user = await User.findOne( {username: req.body.username})
+    if (user) {
+      const result = req.body.password === user.password;
+      if (result) {
+        res.render("./user/secret");
+      } else {
+        res.status(400).json({error: "password doesn't match"})
+      }
+    } else {
+      res.status(400).json({error: "user doesn't exist"})
+    }
+  } catch (error) {
+    res.status(400).json({error})
+  }
+})
 
 //handle user logout
 app.get("/logout", (req, res)=> {
