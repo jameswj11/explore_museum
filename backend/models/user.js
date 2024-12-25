@@ -9,10 +9,10 @@ let newUser = new Schema({
     password: {
         type: String
     }
-})
+});
 
-newUser.plugin(PassportLocalMongoose)
+newUser.plugin(PassportLocalMongoose);
 
-const User = mongoose.model("User", newUser)
+const User = mongoose.model("User", newUser);
 
 export default User;
