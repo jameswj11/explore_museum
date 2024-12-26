@@ -11,12 +11,10 @@ import userRoute from "./backend/routes/user_route.js"
 import User from "./backend/models/user.js"
 import passport from "passport";  
 import LocalStrategy from "passport-local";
-import passportLocalMongoose from "passport-local-mongoose";
 import mongoose from "mongoose";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -24,21 +22,24 @@ const __dirname = dirname(__filename);
 mongoose.connect("mongodb://localhost/5000");
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(session({
   secret: "testUser",
   resave: false,
-  saveUnitialized: false,
-  cookie: { secure: true }
+  saveUninitialized: false
 }))
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.deserializeUser(User.deserializeUser())
 
 // routing
 app.use("/", homeRoute);

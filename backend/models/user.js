@@ -8,6 +8,9 @@ let newUser = new Schema({
     },
     password: {
         type: String
+    },
+    favorites: {
+        type: Array
     }
 });
 
