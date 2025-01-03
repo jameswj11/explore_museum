@@ -1,10 +1,16 @@
 import express from "express";
 import User from "../models/user.js";
+import {saveArt, deleteArt} from "../models/save.js";
 import passport from "passport";
 // import passport from "passport";
 
 const router = express.Router();
 let currentUser;
+
+// check user auth
+router.get("/", (req, res)=>{
+  res.send(currentUser);
+})
 
 // show signup page
 router.get("/register", (req, res) => {
@@ -51,27 +57,33 @@ router.post("/login", async (req, res)=> {
   };
 });
 
-// successful login
-router.get("/secret", isLoggedIn, (req, res)=> {
-  res.render("secret");
-});
-
 // handle user logout
 router.get("/logout", (req, res)=> {
   req.logout(function(err) {
     if (err) return next(err);
+    currentUser = '';
     res.redirect('../../');
   });
 });
 
-// check if logged in
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.redirect("./user/login");
-};
-
+// handle saving favorites
 router.post("/save", (req, res)=>{
-  console.log('save request, current user is:', currentUser, 'request is:', req.body)
+  if (req.isAuthenticated()) {
+    saveArt(req, res, currentUser);
+    res.send({user: true})
+  } else {
+    res.send({user: false})
+  }
+});
+
+// handle deleting favorites
+router.post("/delete", async (req, res)=> {
+  await deleteArt(req, res, currentUser);
+})
+
+// render collection page
+router.get("/collection", (req, res)=>{
+  res.render("./user/collection")
 })
 
 export default router;

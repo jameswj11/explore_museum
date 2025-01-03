@@ -8,7 +8,7 @@ import { fileURLToPath } from "url";
 import homeRoute from "./backend/routes/home_route.js";
 import API_route from "./backend/routes/api_route.js";
 import userRoute from "./backend/routes/user_route.js"
-import User from "./backend/models/user.js"
+import User from "./backend/models/user.js";
 import passport from "passport";  
 import LocalStrategy from "passport-local";
 import mongoose from "mongoose";

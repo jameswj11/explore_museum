@@ -54,10 +54,18 @@ function createElements(dataArray) {
     desc.textContent = element.longTitle;
 
     card.id = element.id;
+    card.setAttribute('dataImage', element.imageURL);
+    card.setAttribute('dataText', element.longTitle);
 
     card.append(image);
     card.append(desc);
-    card.append(saveBtn);
+
+    // check user auth
+    axios.get('/user').then((response)=> {
+      if (response.data.username) {
+        card.append(saveBtn);
+      };
+    });
 
     resultsContainer.append(card);
   });
@@ -65,12 +73,16 @@ function createElements(dataArray) {
 
 // handle save to favorites
 function saveArtwork(e) {
-  const artwork = e.target.parentElement;
-  
+  const artwork = {};
+  artwork.img = e.target.parentElement.getAttribute('dataImage');
+  artwork.desc = e.target.parentElement.getAttribute('dataText');
+
   axios.post('/user/save', {
-    savedArt: formData
+    savedArt: artwork
   }).then((response)=> {
-    console.log(response)
+    if (!response.data.user) {
+      window.location.href = '/user/login';
+    }
   }).catch((error)=> {
     console.log(error)
   })
