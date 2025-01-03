@@ -69,11 +69,13 @@ router.get("/logout", (req, res)=> {
 
 // handle saving favorites
 router.post("/save", async (req, res)=>{
+  console.log('saving from route')
   await saveArt(req.user, req.body.savedArt);
 });
 
 // handle deleting favorites
 router.post("/delete", async (req, res)=> {
+  console.log('post delete, route')
   await deleteArt(req.user, req.body.savedArt);
 })
 

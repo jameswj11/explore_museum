@@ -85,6 +85,10 @@ function saveArtwork(e) {
   }).catch((error)=> {
     console.log(error)
   })
+
+  e.target.textContent = 'Saved';
+  e.target.removeEventListener("click", saveArtwork)
+  e.target.setAttribute("disabled", "disabled")
 };
 
 // handle search queries

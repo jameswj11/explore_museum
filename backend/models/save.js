@@ -1,8 +1,5 @@
 import User from "./user.js";
 
-// const uri = "mongodb://localhost/exploreRijksmuseum";
-// const client = new MongoClient(uri);
-
 async function saveArt(currentUser, art) {
   try {
     const user = await User.findOne({ username: currentUser.username });
@@ -11,7 +8,8 @@ async function saveArt(currentUser, art) {
       return null;
     }
 
-    if (user.favorites.indexOf(art) < 0) {
+    // return if object already is saved
+    if (user.favorites.some(e => e.desc === art.desc)) {
       return;
     }
 
