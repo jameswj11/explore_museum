@@ -53,7 +53,6 @@ function createElements(dataArray) {
     image.src = element.imageURL;
     desc.textContent = element.longTitle;
 
-    card.id = element.id;
     card.setAttribute('dataImage', element.imageURL);
     card.setAttribute('dataText', element.longTitle);
 
@@ -64,7 +63,7 @@ function createElements(dataArray) {
     axios.get('/user').then((response)=> {
       if (response.data.username) {
         card.append(saveBtn);
-      };
+      }
     });
 
     resultsContainer.append(card);
@@ -82,7 +81,7 @@ function saveArtwork(e) {
   }).then((response)=> {
     if (!response.data.user) {
       window.location.href = '/user/login';
-    }
+    };
   }).catch((error)=> {
     console.log(error)
   })

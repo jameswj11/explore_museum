@@ -1,10 +1,11 @@
 import express from "express";
 import User from "../models/user.js";
 import {saveArt, deleteArt} from "../models/save.js";
-import passport from "passport";
-// import passport from "passport";
+import mongoose from "mongoose";
+import { MongoClient } from "mongodb";
 
 const router = express.Router();
+
 let currentUser;
 
 // check user auth
@@ -67,23 +68,21 @@ router.get("/logout", (req, res)=> {
 });
 
 // handle saving favorites
-router.post("/save", (req, res)=>{
-  if (req.isAuthenticated()) {
-    saveArt(req, res, currentUser);
-    res.send({user: true})
-  } else {
-    res.send({user: false})
-  }
+router.post("/save", async (req, res)=>{
+  await saveArt(req.user, req.body.savedArt);
 });
 
 // handle deleting favorites
 router.post("/delete", async (req, res)=> {
-  await deleteArt(req, res, currentUser);
+  await deleteArt(req.user, req.body.savedArt);
 })
 
 // render collection page
 router.get("/collection", (req, res)=>{
-  res.render("./user/collection")
+  res.render("./user/collection", {favorites: req.user.favorites})
+})
+
+router.post("/collection", (req, res)=> {
 })
 
 export default router;

@@ -19,7 +19,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // connect DB
-mongoose.connect("mongodb://localhost/5000");
+mongoose.connect("mongodb://localhost/exploreRijksmuseum");
 
 // middlewares
 app.use(cors({
