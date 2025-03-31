@@ -1,5 +1,5 @@
+
 let $mainContainer = $("#mainContainer");
-let $resultsContainer = $("#resultsContainer");
 
 const queryObject = {};
 
@@ -37,37 +37,56 @@ function parseData(data) {
   createElements(dataArray);
 }
 
+let userLoggedIn = false;
+axios.get('/user').then((response)=> {
+  if (response.data.username) {
+    userLoggedIn = true;
+  }
+})
+
 function createElements(dataArray) {
   // clear container for each new search
-  $resultsContainer.empty();
+  $mainContainer.empty();
 
-  dataArray.forEach((element) => {
-    let card = document.createElement("div");
-    let image = document.createElement("img");
-    let desc = document.createElement("p");
-    let saveBtn = document.createElement("button");
+  let numCards = dataArray.length;
+  let numRows = Math.ceil(numCards/3);
+  let numCols = 3;
 
-    saveBtn.addEventListener("click", saveArtwork);
-    saveBtn.textContent = "Save";
+  for (let i = 0, cardNum = 0; i < numRows; i++) {
+    let row = document.createElement("div");
+    row.setAttribute('class', 'row');
+    $mainContainer.append(row);
+    for (let j = 0; j < numCols && cardNum < numCards; j++, cardNum++) {
+      let col = document.createElement("div");
+      col.setAttribute('class', 'col');
+      row.append(col);
+      
+      let card = document.createElement("div");
+      let image = document.createElement("img");
+      let desc = document.createElement("p");
+      let saveBtn = document.createElement("button");
+  
+      image.setAttribute('class', '.img-responsive')
+  
+      saveBtn.addEventListener("click", saveArtwork);
+      saveBtn.textContent = "Save";
+  
+      image.src = dataArray[cardNum].imageURL;
+      desc.textContent = dataArray[cardNum].longTitle;
+  
+      card.setAttribute('dataImage', dataArray[cardNum].imageURL);
+      card.setAttribute('dataText', dataArray[cardNum].longTitle);
+  
+      card.append(image);
+      card.append(desc);
 
-    image.src = element.imageURL;
-    desc.textContent = element.longTitle;
-
-    card.setAttribute('dataImage', element.imageURL);
-    card.setAttribute('dataText', element.longTitle);
-
-    card.append(image);
-    card.append(desc);
-
-    // check user auth
-    axios.get('/user').then((response)=> {
-      if (response.data.username) {
+      if (userLoggedIn) {
         card.append(saveBtn);
-      }
-    });
+      };
 
-    resultsContainer.append(card);
-  });
+      col.append(card);
+    }
+  };
 };
 
 // handle save to favorites
